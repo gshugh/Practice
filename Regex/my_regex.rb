@@ -40,13 +40,12 @@ module MyRegex
   end
 
 #  Anywhere in the text, return all patterns (scan)that start with a word (\w+),
-# some number of spaces (\s+), a one or two digit number (\d{1,2}), a comma
-# followed by some number of spaces (,\s+), and ending with a 4 digit number
-# (\d{4}).
-# TODO don't let the 2 digit number be above 31.
+# some number of spaces (\s+), a one or two digit number of 1-31
+# ([0-2]\d?|[3][01]?), a comma followed by some number of spaces (,\s+), and
+# ending with a 4 digit number (\d{4}).
 
   def MyRegex.find_sorted_dates(words)
-    d = words.scan(/(\w+)\s+(\d{1,2}),\s+(\d{4})/)
+    d = words.scan(/(\w+)\s+((\w+)\s+([0-2]\d?|[3][01]?),\s+(\d{4})),\s+(\d{4})/)
     temp ||= []
     d.each do |m|
       temp <<  Date.strptime("{#{m[2]}, #{m[0]}, #{m[1]} }", "{ %Y, %B, %d }")
