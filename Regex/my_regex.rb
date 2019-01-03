@@ -39,18 +39,25 @@ module MyRegex
     words.match(/\$[\d,]+/)
   end
 
-#  Anywhere in the text, return all patterns (scan)that start with a word (\w+),
-# some number of spaces (\s+), a one or two digit number of 1-31
-# ([0-2]\d?|[3][01]?), a comma followed by some number of spaces (,\s+), and
-# ending with a 4 digit number (\d{4}).
+#  Return an array of Dates from the text. The Dates are found from patterns
+# (scan) that start with a word (\w+), some number of spaces (\s+), a one or
+# two digit number of 1-31 ([0-2]\d?|[3][01]?), a comma followed by some number
+# of spaces (,\s+), and ending with a 4 digit number (\d{4}).
+# If no Date is found, return nil.
 
   def MyRegex.find_sorted_dates(words)
     d = words.scan(/(\w+)\s+((\w+)\s+([0-2]\d?|[3][01]?),\s+(\d{4})),\s+(\d{4})/)
-    temp ||= []
+    temp ||= nil
     d.each do |m|
-      temp <<  Date.strptime("{#{m[2]}, #{m[0]}, #{m[1]} }", "{ %Y, %B, %d }")
+      begin
+        temp << Date.strptime("{#{m[2]}, #{m[0]}, #{m[1]} }", "{ %Y, %B, %d }")
+      rescue ArgumentError
+        return(nil)
+      end
     end
-    temp.sort
+    unless temp.nil?
+      return(temp.sort)
+    end
   end
 
 end

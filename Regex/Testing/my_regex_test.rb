@@ -38,9 +38,13 @@ class MyRegexTest < Test::Unit::TestCase
     TEST_MONTHS.each do |m|
       [1-50].each do |d|
         test = "#{m}, #{d}, 1999"
-        date = Date.strptime(test)
-        assert_equal(MyRegex.find_sorted_dates(test), date,
-                     "Test failure for #{test}")
+        begin
+          date = Date.strptime(test)
+          assert_equal(MyRegex.find_sorted_dates(test), date,
+                       "Test failure for #{test}")
+        rescue
+          assert_nil(MyRegex.find_sorted_dates(test), "Test failue for #{test}")
+        end
       end
     end
   end
